@@ -26,4 +26,16 @@ node_modules/
 
 # Task files
 tasks.json
-tasks/ 
+tasks/
+
+# Ignore Firebase build and cache artifacts
+.firebase/
+
+# Ignore Next.js build cache (including nested cache folders)
+.next/
+.next/cache/
+.next/cache/webpack/
+project-manager/.firebase/
+project-manager/.firebase/task-manager-2dae0/functions/.next/
+project-manager/.firebase/task-manager-2dae0/functions/.next/cache/
+project-manager/.firebase/task-manager-2dae0/functions/.next/cache/webpack/ 
