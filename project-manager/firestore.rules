@@ -35,5 +35,18 @@ service cloud.firestore {
         }
       }
     }
+
+    // Collection group queries for notifications and My Tasks page
+    match /{path=**}/tasks/{taskId} {
+      // Allow users to read tasks they own OR are assigned to (for notifications and My Tasks)
+      allow read: if request.auth != null && 
+                    (resource.data.owner == request.auth.uid || 
+                     resource.data.assignedTo == request.auth.uid);
+    }
+
+    match /{path=**}/subtasks/{subtaskId} {
+      // Allow users to read subtasks assigned to them (for notifications and My Tasks)
+      allow read: if request.auth != null && resource.data.assignedTo == request.auth.uid;
+    }
   }
 }

@@ -31,16 +31,19 @@ import { cn } from "@/lib/utils";
 import { Timestamp, doc, updateDoc, collection, query, getDocs } from "firebase/firestore";
 import { getFirebaseServices } from "@/lib/firebase";
 import { useState } from "react";
-import { Task, Subtask } from "@/types";
+import { Task, Subtask, BoardMember, BoardStatus } from "@/types";
 import { toast } from "sonner";
+import { TaskAssignDropdown } from "@/components/TaskAssignDropdown";
 
 const { db } = getFirebaseServices();
 
 const taskFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  status: z.enum(["todo", "in-progress", "done", "pending"]),
+  status: z.string(),
   dueDate: z.date().optional(),
+  assignedTo: z.string().optional(),
+  remark: z.string().optional(),
 });
 
 type TaskFormValues = z.infer<typeof taskFormSchema>;
@@ -48,6 +51,8 @@ type TaskFormValues = z.infer<typeof taskFormSchema>;
 interface EditTaskFormProps {
   boardId: string;
   task: Task;
+  boardMembers: BoardMember[];
+  boardStatuses: BoardStatus[];
   onTaskUpdated: () => void;
   onClose: () => void;
 }
@@ -55,6 +60,8 @@ interface EditTaskFormProps {
 export function EditTaskForm({
   boardId,
   task,
+  boardMembers,
+  boardStatuses,
   onTaskUpdated,
   onClose,
 }: EditTaskFormProps) {
@@ -67,6 +74,8 @@ export function EditTaskForm({
       description: task.description || "",
       status: task.status,
       dueDate: task.dueDate ? task.dueDate.toDate() : undefined,
+      assignedTo: task.assignedTo || undefined,
+      remark: task.remark || "",
     },
   });
 
@@ -102,6 +111,8 @@ export function EditTaskForm({
       await updateDoc(taskRef, {
         ...data,
         dueDate: data.dueDate ? Timestamp.fromDate(data.dueDate) : null,
+        assignedTo: data.assignedTo || null,
+        remark: data.remark || "",
       });
       onTaskUpdated();
     } catch (error) {
@@ -181,10 +192,14 @@ export function EditTaskForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="backdrop-blur-sm bg-white/95 border-white/20">
-                      <SelectItem value="todo">To Do</SelectItem>
-                      <SelectItem value="in-progress">In Progress</SelectItem>
-                      <SelectItem value="done">Done</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
+                      {boardStatuses.map((status) => (
+                        <SelectItem key={status.id} value={status.id}>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${status.color}`} />
+                            {status.name}
+                          </div>
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -231,6 +246,46 @@ export function EditTaskForm({
               )}
             />
           </div>
+          
+          {/* Assignment Field */}
+          <FormField
+            control={form.control}
+            name="assignedTo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium text-gray-700">Assign To</FormLabel>
+                <FormControl>
+                  <TaskAssignDropdown
+                    selectedMemberId={field.value}
+                    boardMembers={boardMembers}
+                    onSelect={field.onChange}
+                    placeholder="Assign to member"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Remark Field */}
+          <FormField
+            control={form.control}
+            name="remark"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium text-gray-700">Remark / Notes</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    placeholder="Add any additional notes or comments..." 
+                    {...field} 
+                    className="backdrop-blur-sm bg-white/80 border-white/20 focus:border-blue-300 focus:ring-2 focus:ring-blue-200/50 transition-all duration-200 min-h-[80px]"
+                    rows={3}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
           <div className="flex justify-end gap-3 pt-4">
             <Button 

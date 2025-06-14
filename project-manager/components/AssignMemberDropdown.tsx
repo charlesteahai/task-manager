@@ -39,6 +39,15 @@ export function AssignMemberDropdown({
 
   const selectedMember = boardMembers.find((member) => member.uid === subtask.assignedTo);
 
+  const getDisplayName = (member: User): string => {
+    return member.displayName || member.email || 'Unknown User';
+  };
+
+  const getAvatarFallback = (member: User): string => {
+    const displayName = member.displayName || member.email || 'U';
+    return displayName[0]?.toUpperCase() || 'U';
+  };
+
   const handleAssign = async (memberId: string | undefined) => {
     const taskPath = subtask.id.split('_task_')[0];
     const subtaskIdOnly = subtask.id.split('_task_')[1];
@@ -68,9 +77,9 @@ export function AssignMemberDropdown({
             <div className="flex items-center gap-2">
               <Avatar className="h-5 w-5">
                 <AvatarImage src={selectedMember.photoURL ?? undefined} />
-                <AvatarFallback>{selectedMember.displayName?.[0]}</AvatarFallback>
+                <AvatarFallback>{getAvatarFallback(selectedMember)}</AvatarFallback>
               </Avatar>
-              {selectedMember.displayName}
+              {getDisplayName(selectedMember)}
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -101,7 +110,7 @@ export function AssignMemberDropdown({
               {boardMembers.map((member) => (
                 <CommandItem
                   key={member.uid}
-                  value={member.displayName ?? member.email ?? ''}
+                  value={getDisplayName(member)}
                   onSelect={() => {
                     handleAssign(member.uid);
                     setOpen(false);
@@ -116,9 +125,9 @@ export function AssignMemberDropdown({
                   <div className="flex items-center gap-2">
                     <Avatar className="h-5 w-5">
                       <AvatarImage src={member.photoURL ?? undefined} />
-                      <AvatarFallback>{member.displayName?.[0]}</AvatarFallback>
+                      <AvatarFallback>{getAvatarFallback(member)}</AvatarFallback>
                     </Avatar>
-                    {member.displayName}
+                    {getDisplayName(member)}
                   </div>
                 </CommandItem>
               ))}

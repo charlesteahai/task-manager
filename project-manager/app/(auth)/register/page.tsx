@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+
 import { useAuth } from "@/app/contexts/AuthContext";
 import {
   Card,
@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2, Mail, Lock, UserPlus, Sparkles } from "lucide-react";
+import { Loader2, Mail, Lock, UserPlus } from "lucide-react";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ const RegisterPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, handleAuthError } = useAuth();
-  const router = useRouter();
+
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

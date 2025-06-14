@@ -1,0 +1,14 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/boards/create/page": "/boards/create",
+  "/dashboard/page": "/dashboard",
+  "/my-tasks/page": "/my-tasks",
+  "/page": "/",
+  "/profile/page": "/profile",
+  "/(auth)/login/page": "/login",
+  "/boards/[boardId]/tasks/[taskId]/page": "/boards/[boardId]/tasks/[taskId]",
+  "/(auth)/register/page": "/register",
+  "/boards/[boardId]/page": "/boards/[boardId]",
+  "/boards/[boardId]/edit/page": "/boards/[boardId]/edit"
+}

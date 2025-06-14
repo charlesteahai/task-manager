@@ -10,16 +10,14 @@ import { Board } from "@/types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Header } from "@/components/Header";
+import { AuthGuard } from "@/components/AuthGuard";
 import { 
   Plus, 
   Calendar, 
   Users, 
-  FolderOpen, 
-  Sparkles,
+  FolderOpen,
   TrendingUp,
-  Clock,
-  Target,
-  BarChart3
+  Target
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -74,7 +72,7 @@ const DashboardPage = () => {
       title: "This Month", 
       value: boards.filter(board => {
         if (!board.createdAt) return false;
-        const boardDate = board.createdAt?.toDate ? board.createdAt.toDate() : new Date(board.createdAt as any);
+        const boardDate = board.createdAt?.toDate ? board.createdAt.toDate() : new Date(board.createdAt as unknown as string);
         const now = new Date();
         return boardDate.getMonth() === now.getMonth() && boardDate.getFullYear() === now.getFullYear();
       }).length, 
@@ -85,7 +83,8 @@ const DashboardPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <AuthGuard>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-purple-600/10 rounded-full blur-3xl" />
@@ -200,13 +199,13 @@ const DashboardPage = () => {
                             <Calendar className="w-4 h-4" />
                                                          <span>
                                {board.createdAt ? format(
-                                 board.createdAt?.toDate ? board.createdAt.toDate() : new Date(board.createdAt as any), 
+                                 board.createdAt?.toDate ? board.createdAt.toDate() : new Date(board.createdAt as unknown as string), 
                                  'MMM dd'
                                ) : 'Recently'}
                              </span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
+                            <Calendar className="w-4 h-4" />
                             <span>Active</span>
                           </div>
                         </div>
@@ -243,6 +242,7 @@ const DashboardPage = () => {
         )}
       </div>
     </div>
+    </AuthGuard>
   );
 };
 

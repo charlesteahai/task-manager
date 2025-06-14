@@ -9,12 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import { getFirebaseServices } from "@/lib/firebase";
 import * as z from "zod";
-import { Subtask } from "@/types";
+import { Subtask, BoardMember, BoardStatus } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { TaskAssignDropdown } from "@/components/TaskAssignDropdown";
+import { format } from "date-fns";
 import { toast } from "sonner";
 
 const { db } = getFirebaseServices();
@@ -22,31 +26,64 @@ const { db } = getFirebaseServices();
 const subtaskSchema = z.object({
   title: z.string().min(1, "Title is required"),
   status: z.string(),
+  assignedTo: z.string().optional(),
+  dueDate: z.string().optional(),
+  remark: z.string().optional(),
 });
 
 interface EditSubtaskFormProps {
   boardId: string;
   taskId: string;
   subtask: Subtask;
+  boardMembers: BoardMember[];
+  boardStatuses: BoardStatus[];
   onSubtaskUpdated: () => void;
   onClose: () => void;
 }
 
-export const EditSubtaskForm = ({ boardId, taskId, subtask, onSubtaskUpdated, onClose }: EditSubtaskFormProps) => {
+export const EditSubtaskForm = ({ boardId, taskId, subtask, boardMembers, boardStatuses, onSubtaskUpdated, onClose }: EditSubtaskFormProps) => {
   const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<z.infer<typeof subtaskSchema>>({
     resolver: zodResolver(subtaskSchema),
     defaultValues: {
       title: subtask.title,
       status: subtask.status,
+      assignedTo: subtask.assignedTo || "",
+      dueDate: subtask.dueDate ? format(subtask.dueDate.toDate(), "yyyy-MM-dd") : "",
+      remark: subtask.remark || "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof subtaskSchema>) => {
     try {
+      const subtaskData: {
+        title: string;
+        status: string;
+        assignedTo?: string;
+        dueDate?: Timestamp;
+        remark?: string;
+      } = {
+        title: data.title,
+        status: data.status,
+      };
+
+      // Add assignedTo if provided
+      if (data.assignedTo) {
+        subtaskData.assignedTo = data.assignedTo;
+      }
+
+      // Add dueDate if provided
+      if (data.dueDate) {
+        const dueDate = new Date(data.dueDate);
+        subtaskData.dueDate = Timestamp.fromDate(dueDate);
+      }
+
+      // Add remark if provided
+      if (data.remark) {
+        subtaskData.remark = data.remark;
+      }
+
       const subtaskRef = doc(db, "boards", boardId, "tasks", taskId, "subtasks", subtask.id);
-      await updateDoc(subtaskRef, {
-        ...data,
-      });
+      await updateDoc(subtaskRef, subtaskData);
       onSubtaskUpdated();
       onClose();
     } catch (error) {
@@ -56,44 +93,106 @@ export const EditSubtaskForm = ({ boardId, taskId, subtask, onSubtaskUpdated, on
   };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-                <Input
-                    id="title"
-                    {...register("title")}
-                    placeholder="Subtask title"
-                    aria-invalid={errors.title ? "true" : "false"}
-                />
-                {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
-            </div>
+        <div className="relative">
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 rounded-xl -z-10" />
+            
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
+                <div className="space-y-2">
+                    <Label htmlFor="title" className="text-sm font-medium text-gray-700">Subtask Title *</Label>
+                    <Input
+                        id="title"
+                        {...register("title")}
+                        placeholder="Enter subtask title"
+                        aria-invalid={errors.title ? "true" : "false"}
+                        className="backdrop-blur-sm bg-white/80 border-white/20 focus:border-blue-300 focus:ring-2 focus:ring-blue-200/50 transition-all duration-200"
+                    />
+                    {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
+                </div>
 
-            <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
-                 <Controller
-                    name="status"
-                    control={control}
-                    render={({ field }) => (
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select a status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="todo">To Do</SelectItem>
-                                <SelectItem value="in-progress">In Progress</SelectItem>
-                                <SelectItem value="done">Done</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    )}
-                />
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="status" className="text-sm font-medium text-gray-700">Status</Label>
+                        <Controller
+                            name="status"
+                            control={control}
+                            render={({ field }) => (
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <SelectTrigger className="backdrop-blur-sm bg-white/80 border-white/20 focus:border-blue-300 focus:ring-2 focus:ring-blue-200/50 transition-all duration-200">
+                                        <SelectValue placeholder="Select a status" />
+                                    </SelectTrigger>
+                                    <SelectContent className="backdrop-blur-sm bg-white/95 border-white/20">
+                                        {boardStatuses.map((status) => (
+                                            <SelectItem key={status.id} value={status.id}>
+                                                <div className="flex items-center gap-2">
+                                                    <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${status.color}`} />
+                                                    {status.name}
+                                                </div>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                    </div>
 
-            <div className="flex justify-end gap-2">
-                <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
-                <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Updating..." : "Update Subtask"}
-                </Button>
-            </div>
-        </form>
+                    <div className="space-y-2">
+                        <Label htmlFor="dueDate" className="text-sm font-medium text-gray-700">Due Date</Label>
+                        <Input
+                            id="dueDate"
+                            type="date"
+                            {...register("dueDate")}
+                            min={format(new Date(), "yyyy-MM-dd")}
+                            className="backdrop-blur-sm bg-white/80 border-white/20 focus:border-blue-300 focus:ring-2 focus:ring-blue-200/50 transition-all duration-200"
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="assignedTo" className="text-sm font-medium text-gray-700">Assigned To</Label>
+                    <Controller
+                        name="assignedTo"
+                        control={control}
+                        render={({ field }) => (
+                            <TaskAssignDropdown
+                                selectedMemberId={field.value}
+                                boardMembers={boardMembers}
+                                onSelect={field.onChange}
+                                placeholder="Assign subtask to member"
+                            />
+                        )}
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="remark" className="text-sm font-medium text-gray-700">Remark / Notes</Label>
+                    <Textarea
+                        id="remark"
+                        {...register("remark")}
+                        placeholder="Add any additional notes or comments..."
+                        rows={3}
+                        className="backdrop-blur-sm bg-white/80 border-white/20 focus:border-blue-300 focus:ring-2 focus:ring-blue-200/50 transition-all duration-200 min-h-[80px] resize-none"
+                    />
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4">
+                    <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={onClose}
+                        className="backdrop-blur-sm bg-white/50 border-white/20 hover:bg-white/70 transition-all duration-200"
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isSubmitting ? "Updating..." : "Update Subtask"}
+                    </Button>
+                </div>
+            </form>
+        </div>
     );
 } 

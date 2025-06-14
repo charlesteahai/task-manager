@@ -25,6 +25,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<UserCredential | void>;
   signOut: () => Promise<void>;
   handleAuthError: (error: unknown, context: string) => void;
+  refreshUser: () => void;
   notifications: {id: string, name: string}[];
   setNotifications: React.Dispatch<React.SetStateAction<{id: string, name: string}[]>>;
 }
@@ -37,6 +38,7 @@ const AuthContext = createContext<AuthContextType>({
   signInWithGoogle: async () => {},
   signOut: async () => {},
   handleAuthError: () => {},
+  refreshUser: () => {},
   notifications: [],
   setNotifications: () => {},
 });
@@ -155,6 +157,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const refreshUser = () => {
+    // Force refresh the current user data
+    if (auth.currentUser) {
+      auth.currentUser.reload().then(() => {
+        setUser(auth.currentUser);
+      });
+    }
+  };
+
   useEffect(() => {
     // Simple auth state listener - just use the Firebase user directly
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
@@ -173,6 +184,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     signInWithGoogle,
     signOut,
     handleAuthError,
+    refreshUser,
     notifications,
     setNotifications
   }

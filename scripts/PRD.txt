@@ -1,0 +1,98 @@
+# Overview
+This document outlines the requirements for "TaskFlow", a web-based task management application similar to Trello. The platform is designed for teams and individuals to organize, track, and collaborate on projects. It solves the problem of disorganized project management by providing a visual, intuitive interface for managing workflows. The target users are small to medium-sized teams and individual professionals who need a flexible tool for project and task management.
+
+# Core Features
+- **User Authentication:**
+  - **What it does:** Allows users to register and log in to the application.
+  - **Why it's important:** Secures user data and personalizes the experience.
+  - **How it works:** Users can sign up with an email/password or through a Google account. Firebase Authentication will manage user sessions.
+
+- **Board Management:**
+  - **What it does:** Users can create, view, update, and delete project boards. The creator of a board becomes its owner.
+  - **Why it's important:** Boards are the top-level containers for organizing tasks related to a specific project or workflow.
+  - **How it works:** A user can create a new board, giving it a name and description. The owner can later modify these details or delete the board.
+
+- **Collaboration:**
+  - **What it does:** Board owners can invite other registered users to their boards as members.
+  - **Why it's important:** Enables team collaboration on shared projects.
+  - **How it works:** An owner can add a user to a board by their email address. All members of a board can view and manage its tasks.
+
+- **Task & Sub-task Management:**
+  - **What it does:** Board members can create high-level tasks. Each task can be broken down into smaller, actionable sub-tasks.
+  - **Why it's important:** Provides granular control over project execution and allows for detailed tracking of work.
+  - **How it works:** Within a board, users can create tasks with a title, description, creation date, estimated end date, and status (e.g., "To Do", "In Progress", "Done"). Within each task, users can create sub-tasks with similar properties and assign them to specific board members.
+
+- **Personal Task Dashboard:**
+  - **What it does:** A dedicated view where users can see all sub-tasks assigned to them across all their boards.
+  - **Why it's important:** Gives users a clear, consolidated view of their responsibilities.
+  - **How it works:** A "My Tasks" tab will display a list of all sub-tasks assigned to the logged-in user. The user will be able to filter these tasks by their status.
+
+# User Experience
+- **User Personas:**
+  - **Alex (Project Manager/Board Owner):** Creates boards for new projects, invites team members, creates high-level tasks, and monitors overall progress.
+  - **Ben (Team Member):** Joins boards he's invited to, works on assigned sub-tasks, updates their status, and collaborates with other members.
+- **Key User Flows:**
+  1. **Registration:** New user signs up with Google.
+  2. **Board Creation:** Alex creates a new board for "Q3 Marketing Campaign".
+  3. **Team Invitation:** Alex invites Ben to the board.
+  4. **Task Creation:** Alex adds a task "Design Ad Creatives".
+  5. **Sub-task Creation & Assignment:** Alex breaks down the task into sub-tasks like "Create Banner Ad" and "Create Social Media Post" and assigns them to Ben.
+  6. **Work & Tracking:** Ben views his assigned tasks in the "My Tasks" dashboard, works on them, and updates their status to "Done".
+- **UI/UX Considerations:**
+  - Clean, minimalist interface using Shadcn components.
+  - Responsive design for desktop and mobile use.
+  - Intuitive navigation and clear calls-to-action.
+  - Real-time updates to reflect changes made by other users.
+
+# Technical Architecture
+- **Frontend:**
+  - **Framework:** Next.js (App Router)
+  - **UI Components:** Shadcn/ui
+  - **Styling:** TailwindCSS
+- **Backend:**
+  - **Platform:** Firebase
+  - **Authentication:** Firebase Authentication (Email/Password, Google Provider)
+  - **Database:** Cloud Firestore for storing board, task, and user data.
+  - **Business Logic:** Firebase Functions for server-side operations like user invitations or data validation.
+- **Data Models (Firestore):**
+  - `users/{userId}`: { email, displayName, photoURL }
+  - `boards/{boardId}`: { name, description, ownerId, createdAt, members: [userId1, userId2] }
+  - `tasks/{taskId}`: { boardId, name, description, status, createdAt, estimatedEndDate }
+  - `subtasks/{subtaskId}`: { taskId, name, description, status, createdAt, estimatedEndDate, assignedTo: userId }
+- **APIs and Integrations:**
+  - Firebase SDK for all backend interactions.
+
+# Development Roadmap
+- **Phase 1: Foundation (MVP)**
+  - User authentication (Register/Login).
+  - Firestore database setup with security rules.
+  - Ability for users to create, view, and delete their own boards.
+  - Ability to create and view tasks and sub-tasks within a board (no assignment yet).
+  - Basic "My Tasks" view (no filtering).
+- **Phase 2: Collaboration & Core Features**
+  - Implement user invitations to boards.
+  - Implement sub-task assignment to board members.
+  - Add status filtering to the "My Tasks" dashboard.
+  - Real-time data synchronization for collaborative updates.
+- **Phase 3: Enhancements & Polish**
+  - Drag-and-drop functionality for tasks and sub-tasks.
+  - Advanced filtering and sorting options.
+  - User profile pages.
+  - In-app notifications.
+
+# Logical Dependency Chain
+1.  Set up Firebase project and initialize Auth and Firestore.
+2.  Implement user registration and login flow on the frontend.
+3.  Build the UI and logic for creating and viewing boards.
+4.  Develop the core functionality for adding/viewing tasks and sub-tasks.
+5.  Implement the user invitation and board member logic.
+6.  Build the "My Tasks" dashboard with assignment and filtering capabilities.
+7.  Layer in real-time updates and more advanced features like drag-and-drop.
+
+# Risks and Mitigations
+- **Risk:** Complex Firestore security rules could lead to data access issues.
+  - **Mitigation:** Write and test rules incrementally for each feature. Use the Firebase Emulator Suite for local testing.
+- **Risk:** Managing real-time state across multiple users can be complex.
+  - **Mitigation:** Leverage Firestore's real-time listeners effectively and use a robust state management library on the client-side if needed.
+- **Risk:** Scope creep adding too many features to the MVP.
+  - **Mitigation:** Strictly adhere to the phased development roadmap outlined above. 

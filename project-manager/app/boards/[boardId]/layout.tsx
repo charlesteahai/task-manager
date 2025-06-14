@@ -7,9 +7,5 @@ export default function BoardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <RealtimeDataProvider>
-      {children}
-    </RealtimeDataProvider>
-  );
+  return <RealtimeDataProvider>{children}</RealtimeDataProvider>;
 } 

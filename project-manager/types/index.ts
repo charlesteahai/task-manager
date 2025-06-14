@@ -13,10 +13,18 @@ export interface Board {
   description?: string;
   owner: string; // User UID
   members: string[]; // Array of User UIDs
+  customStatuses?: BoardStatus[];
   createdAt: Timestamp;
 }
 
-export type TaskStatus = "pending" | "in-progress" | "done" | "todo";
+export interface BoardStatus {
+  id: string;
+  name: string;
+  color: string;
+  order: number;
+}
+
+export type TaskStatus = string; // Made dynamic to support custom statuses
 
 export interface Task {
   id: string;
@@ -25,15 +33,19 @@ export interface Task {
   status: TaskStatus;
   dueDate?: Timestamp;
   owner: string;
+  assignedTo?: string;
+  remark?: string;
   createdAt: Timestamp;
 }
 
 export interface Subtask {
   id: string;
   title: string;
-  status: 'todo' | 'in-progress' | 'done' | 'pending';
+  status: string; // Made dynamic to support custom statuses
   createdAt: Timestamp;
   assignedTo?: string;
+  dueDate?: Timestamp;
+  remark?: string;
 }
 
 export interface BoardMember {
