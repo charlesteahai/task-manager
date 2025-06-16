@@ -1,0 +1,77 @@
+# Task ID: 8
+# Title: Create Personal Task Dashboard
+# Status: done
+# Dependencies: 7
+# Priority: medium
+# Description: Build 'My Tasks' dashboard showing all sub-tasks assigned to the current user across all boards
+# Details:
+1. Create My Tasks page with dedicated route
+2. Implement Firestore query to fetch user's assigned sub-tasks
+3. Build task list UI with board context information
+4. Add status filtering (All, To Do, In Progress, Done)
+5. Implement sorting by due date and creation date
+6. Add task status update functionality from dashboard
+7. Include board name and task name for context
+8. Add loading states and empty states
+9. Implement real-time updates for task changes
+
+# Test Strategy:
+Test task aggregation across multiple boards, verify filtering functionality, test status updates from dashboard, validate real-time updates when tasks are modified
+
+# Subtasks:
+## 1. Create My Tasks page with routing and data fetching [done]
+### Dependencies: None
+### Description: Set up the My Tasks dashboard page with proper routing and implement the Firestore query to fetch all subtasks assigned to the current user across all boards.
+### Details:
+1. Create a new page component named MyTasksDashboard.js
+2. Set up routing in the app router to point /my-tasks to this component
+3. Implement a Firestore query that fetches all subtasks where assignedTo field matches the current user's ID
+4. Include board and parent task information in the query
+5. Set up state management for the fetched tasks
+6. Implement loading state while data is being fetched
+
+## 2. Build task list UI with context information [done]
+### Dependencies: 8.1
+### Description: Create the UI components to display the user's tasks in a list format, including board name and parent task name for context.
+### Details:
+1. Create a TaskListItem component to display individual tasks
+2. Include visual indicators for task status (To Do, In Progress, Done)
+3. Display board name and parent task name for each task
+4. Implement empty state UI when no tasks are assigned
+5. Add proper spacing and dividers between tasks
+6. Ensure the UI is responsive for different screen sizes
+
+## 3. Implement filtering and sorting functionality [done]
+### Dependencies: 8.2
+### Description: Add the ability to filter tasks by status and sort them by due date or creation date.
+### Details:
+1. Create filter controls for status (All, To Do, In Progress, Done)
+2. Implement sorting options for due date and creation date
+3. Add state management for active filters and sort options
+4. Apply filters and sorting to the task list
+5. Persist filter/sort preferences in local storage
+6. Ensure filters reset appropriately when navigating away and back
+
+## 4. Add task status update functionality [done]
+### Dependencies: 8.2
+### Description: Enable users to update the status of tasks directly from the dashboard without navigating to the board.
+### Details:
+1. Create a status update dropdown or button set for each task
+2. Implement the Firestore update function to change task status
+3. Add optimistic UI updates for immediate feedback
+4. Handle error cases and provide appropriate user feedback
+5. Ensure status changes reflect in real-time across the app
+6. Add confirmation for status changes if needed
+
+## 5. Implement real-time updates and final polish [done]
+### Dependencies: 8.1, 8.2, 8.3, 8.4
+### Description: Set up real-time listeners for task changes and add final UI polish including loading states and animations.
+### Details:
+1. Replace or augment the initial fetch with Firestore onSnapshot listeners
+2. Implement proper cleanup of listeners on component unmount
+3. Add subtle animations for task status changes
+4. Implement skeleton loaders for initial page load
+5. Add pull-to-refresh functionality for mobile users
+6. Perform final testing across different devices and screen sizes
+7. Optimize performance for large numbers of tasks
+

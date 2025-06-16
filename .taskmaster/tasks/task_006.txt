@@ -1,0 +1,51 @@
+# Task ID: 6
+# Title: Build User Invitation and Board Collaboration System
+# Status: done
+# Dependencies: 4
+# Priority: medium
+# Description: Implement functionality for board owners to invite users and manage board membership
+# Details:
+1. Create user invitation form with email input
+2. Implement email validation and user lookup
+3. Add users to board members array in Firestore
+4. Create board member management UI
+5. Implement member removal functionality for board owners
+6. Add member list display on board detail page
+7. Update security rules to allow board members access
+8. Add notification system for invitations
+9. Handle edge cases (user not found, already member)
+
+# Test Strategy:
+Test user invitation flow, verify board access for invited members, test member removal, validate security rule updates, test edge cases and error scenarios
+
+# Subtasks:
+## 1. Create User Invitation Form and Email Validation [done]
+### Dependencies: None
+### Description: Develop a form component that allows board owners to invite users by email, with proper validation and error handling.
+### Details:
+Create a modal component with an email input field, implement client-side email format validation using regex, add loading state during submission, and display appropriate error messages. Include a submit button and cancel option. The form should prevent submission of invalid emails.
+
+## 2. Implement User Lookup and Board Membership in Firestore [done]
+### Dependencies: 6.1
+### Description: Create backend functionality to look up users by email and add them to the board's members collection in Firestore.
+### Details:
+Create a Cloud Function that accepts an email and board ID, queries Firestore for matching user accounts, handles cases where users don't exist, and adds valid users to the board's members array with appropriate permission level. Implement transaction handling to prevent race conditions.
+
+## 3. Develop Board Member Management UI [done]
+### Dependencies: 6.2
+### Description: Create a UI component for displaying and managing board members, including removal functionality for board owners.
+### Details:
+Build a component that displays all board members with their roles, implement a removal button visible only to board owners, add confirmation dialog before member removal, and ensure real-time updates when membership changes. Include sorting options and search functionality for boards with many members.
+
+## 4. Update Firestore Security Rules for Board Access [done]
+### Dependencies: 6.2
+### Description: Modify Firestore security rules to allow board members appropriate access to board data based on their membership status.
+### Details:
+Update security rules to check if the requesting user's ID exists in the board's members array, create different access levels (read-only, edit, admin) based on member role, ensure board owners retain full access, and test rules thoroughly with different user scenarios.
+
+## 5. Implement Invitation Notification System [done]
+### Dependencies: 6.2, 6.4
+### Description: Create a notification system to alert users when they've been invited to a board, with appropriate UI indicators and email notifications.
+### Details:
+Set up a Cloud Function trigger that fires when a user is added to a board's members collection, implement email notification using a service like SendGrid, create in-app notifications that appear in the user's notification center, and add a badge indicator for new invitations. Include accept/decline functionality in notifications.
+

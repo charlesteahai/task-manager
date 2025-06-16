@@ -1,0 +1,51 @@
+# Task ID: 5
+# Title: Implement Task and Sub-task Management
+# Status: done
+# Dependencies: 4
+# Priority: high
+# Description: Build comprehensive task and sub-task creation, viewing, and management functionality within boards
+# Details:
+1. Create task creation form with title, description, status, and estimated end date
+2. Build task list view within board detail page
+3. Implement sub-task creation within tasks
+4. Add task and sub-task editing capabilities
+5. Create status management (To Do, In Progress, Done)
+6. Implement task and sub-task deletion
+7. Add date picker for estimated end dates
+8. Create hierarchical view showing tasks and their sub-tasks
+9. Add proper validation and error handling
+
+# Test Strategy:
+Test task creation and editing, verify sub-task hierarchy, test status updates, validate date handling, ensure proper data persistence in Firestore
+
+# Subtasks:
+## 1. Implement Task Creation and Listing [done]
+### Dependencies: None
+### Description: Create a task creation form and implement the task list view within the board detail page
+### Details:
+Build a form component with fields for title, description, status dropdown (To Do, In Progress, Done), and estimated end date. Implement form validation for required fields. Create API endpoints for task creation and retrieval. Develop the task list view component that displays all tasks for a specific board with sorting and filtering options.
+
+## 2. Implement Date Picker and Status Management [done]
+### Dependencies: None
+### Description: Add a date picker component for estimated end dates and implement status management functionality
+### Details:
+Integrate a date picker component that allows users to select estimated end dates for tasks. Implement status management that allows users to change task status between To Do, In Progress, and Done states. Create visual indicators for different statuses and implement status change tracking. Add status filtering in the task list view.
+
+## 3. Implement Sub-task Creation and Hierarchical View [done]
+### Dependencies: None
+### Description: Build sub-task creation functionality within tasks and create a hierarchical view showing tasks and their sub-tasks
+### Details:
+Create a sub-task creation interface within the task detail view. Implement API endpoints for sub-task CRUD operations. Develop a hierarchical view component that displays tasks and their associated sub-tasks with proper indentation and visual cues. Add collapsible/expandable functionality for sub-task sections.
+
+## 4. Implement Task and Sub-task Editing [done]
+### Dependencies: None
+### Description: Add editing capabilities for both tasks and sub-tasks
+### Details:
+Create edit forms for tasks and sub-tasks that pre-populate with existing data. Implement API endpoints for updating task and sub-task information. Add inline editing capabilities for quick updates. Ensure proper validation during edits and implement optimistic UI updates for better user experience.
+
+## 5. Implement Deletion and Error Handling [done]
+### Dependencies: None
+### Description: Add deletion functionality for tasks and sub-tasks with proper error handling and validation
+### Details:
+Implement deletion confirmation dialogs for tasks and sub-tasks. Create API endpoints for deletion operations with cascading deletion for sub-tasks when a parent task is deleted. Add comprehensive error handling for all task operations with user-friendly error messages. Implement proper validation to prevent invalid operations (e.g., completing a task with incomplete sub-tasks).
+

@@ -1,0 +1,82 @@
+# Task ID: 1
+# Title: Setup Firebase Project and Next.js Application
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Initialize Firebase project with Authentication and Firestore, create Next.js app with App Router, and configure basic project structure
+# Details:
+1. Create Firebase project in console
+2. Enable Authentication (Email/Password, Google)
+3. Initialize Firestore database
+4. Create Next.js app: `npx create-next-app@latest taskflow --typescript --tailwind --eslint --app`
+5. Install dependencies: `npm install firebase @firebase/auth @firebase/firestore`
+6. Setup Firebase config in lib/firebase.ts
+7. Configure environment variables for Firebase keys
+8. Install Shadcn/ui: `npx shadcn-ui@latest init`
+9. Setup basic folder structure: components/, lib/, app/
+
+# Test Strategy:
+Verify Firebase connection, test authentication initialization, ensure Next.js app runs successfully on localhost:3000
+
+# Subtasks:
+## 1. Create Firebase Project and Enable Services [done]
+### Dependencies: None
+### Description: Initialize a new Firebase project in the Firebase console and enable the required services for the application.
+### Details:
+1. Go to Firebase console (console.firebase.google.com)
+2. Click 'Add project' and follow the setup wizard
+3. Enable Google Analytics if needed
+4. Navigate to Authentication section and enable Email/Password and Google sign-in methods
+5. Go to Firestore Database and create a new database in production or test mode
+6. Set up initial security rules for Firestore to allow authenticated access
+
+## 2. Initialize Next.js Application with Required Dependencies [done]
+### Dependencies: None
+### Description: Create a new Next.js application with TypeScript, Tailwind CSS, and ESLint support using the App Router architecture.
+### Details:
+1. Run `npx create-next-app@latest taskflow --typescript --tailwind --eslint --app`
+2. Install Firebase dependencies: `npm install firebase @firebase/auth @firebase/firestore`
+3. Install Shadcn/ui: `npx shadcn-ui@latest init` and follow the setup prompts
+4. Set up additional dependencies as needed (e.g., form libraries, state management)
+
+## 3. Configure Firebase SDK and Environment Variables [done]
+### Dependencies: 1.1, 1.2
+### Description: Set up Firebase configuration in the Next.js application and properly manage environment variables for security.
+### Details:
+1. Create a `lib/firebase.ts` file to initialize Firebase
+2. Get Firebase config object from Firebase console (Project settings > Your apps > SDK setup)
+3. Create `.env.local` file with Firebase configuration values
+4. Add environment variables with NEXT_PUBLIC_ prefix for client-side access
+5. Update `.gitignore` to exclude `.env.local`
+6. Create a Firebase initialization function that checks for existing instances
+7. Export auth and firestore instances for use throughout the application
+
+## 4. Establish Project Folder Structure and Component Organization [done]
+### Dependencies: 1.2
+### Description: Set up a scalable folder structure for the Next.js application following best practices for the App Router architecture.
+### Details:
+1. Create the following directories:
+   - `app/`: For route components and layouts
+   - `components/`: For reusable UI components
+   - `lib/`: For utility functions and service integrations
+   - `types/`: For TypeScript type definitions
+   - `hooks/`: For custom React hooks
+   - `context/`: For React context providers
+2. Set up a basic layout in `app/layout.tsx`
+3. Create initial page components for main routes
+4. Organize Shadcn components in a dedicated subfolder
+
+## 5. Implement Authentication Context and Basic UI Components [done]
+### Dependencies: 1.3, 1.4
+### Description: Create an authentication context provider and basic UI components to prepare for user authentication flows.
+### Details:
+1. Create `context/auth-context.tsx` with Firebase auth integration
+2. Implement sign-in, sign-out, and user state management functions
+3. Create basic UI components using Shadcn/ui:
+   - Button component
+   - Form components
+   - Navigation components
+4. Set up a basic protected route mechanism
+5. Create a simple login/signup form component
+6. Implement a user profile dropdown in the navigation
+

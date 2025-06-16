@@ -1,0 +1,51 @@
+# Task ID: 7
+# Title: Implement Sub-task Assignment System
+# Status: done
+# Dependencies: 5, 6
+# Priority: medium
+# Description: Add functionality to assign sub-tasks to specific board members and track assignments
+# Details:
+1. Add assignedTo field to sub-task creation/editing forms
+2. Create user selection dropdown for board members
+3. Update sub-task data model to include assignedTo userId
+4. Add assignment display in sub-task views
+5. Implement assignment change functionality
+6. Add unassignment capability
+7. Update Firestore security rules for assigned tasks
+8. Add visual indicators for assigned vs unassigned tasks
+9. Implement assignment history tracking
+
+# Test Strategy:
+Test sub-task assignment to board members, verify assignment updates, test unassignment flow, validate security rules for assigned tasks
+
+# Subtasks:
+## 1. Update Sub-task Data Model for Assignments [done]
+### Dependencies: None
+### Description: Modify the sub-task data model to include assignment information and update Firestore schema
+### Details:
+Add 'assignedTo' field (userId string) and 'assignmentHistory' array (containing objects with userId, timestamp, and action type) to the sub-task model. Update Firestore schema and ensure backward compatibility with existing sub-tasks by providing default values for new fields. Update Firestore security rules to allow assigned users to modify their assigned tasks.
+
+## 2. Implement User Selection UI Components [done]
+### Dependencies: 7.1
+### Description: Create reusable UI components for selecting board members for task assignment
+### Details:
+Develop a dropdown component that displays board members with their avatars and names. Implement search/filter functionality for boards with many members. Create a user selection modal for mobile views. Ensure components handle loading states and error cases when fetching board members.
+
+## 3. Integrate Assignment UI in Sub-task Forms [done]
+### Dependencies: 7.2
+### Description: Add assignment functionality to sub-task creation and editing forms
+### Details:
+Modify sub-task creation and editing forms to include the user selection component. Add 'Assign to me' shortcut button. Implement form validation for assignment fields. Update form submission handlers to save assignment data to Firestore. Add unassignment capability with confirmation dialog.
+
+## 4. Display Assignment Information in Sub-task Views [done]
+### Dependencies: 7.1
+### Description: Update sub-task display components to show assignment information
+### Details:
+Modify sub-task card and detail views to display assignee information (avatar, name). Add visual indicators for assigned vs unassigned tasks (different styling or icons). Implement tooltips showing assignment details on hover. Update task list views to allow filtering/sorting by assignee.
+
+## 5. Implement Assignment History Tracking [done]
+### Dependencies: 7.1, 7.3, 7.4
+### Description: Add functionality to track and display the history of task assignments
+### Details:
+Create a service to record assignment changes in the assignmentHistory array. Implement a UI component to display assignment history in the task detail view. Add timestamp formatting for history entries. Create assignment analytics view showing assignment distribution across team members.
+

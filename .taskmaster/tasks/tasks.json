@@ -1,0 +1,665 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Setup Firebase Project and Next.js Application",
+      "description": "Initialize Firebase project with Authentication and Firestore, create Next.js app with App Router, and configure basic project structure",
+      "details": "1. Create Firebase project in console\n2. Enable Authentication (Email/Password, Google)\n3. Initialize Firestore database\n4. Create Next.js app: `npx create-next-app@latest taskflow --typescript --tailwind --eslint --app`\n5. Install dependencies: `npm install firebase @firebase/auth @firebase/firestore`\n6. Setup Firebase config in lib/firebase.ts\n7. Configure environment variables for Firebase keys\n8. Install Shadcn/ui: `npx shadcn-ui@latest init`\n9. Setup basic folder structure: components/, lib/, app/",
+      "testStrategy": "Verify Firebase connection, test authentication initialization, ensure Next.js app runs successfully on localhost:3000",
+      "priority": "high",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Firebase Project and Enable Services",
+          "description": "Initialize a new Firebase project in the Firebase console and enable the required services for the application.",
+          "dependencies": [],
+          "details": "1. Go to Firebase console (console.firebase.google.com)\n2. Click 'Add project' and follow the setup wizard\n3. Enable Google Analytics if needed\n4. Navigate to Authentication section and enable Email/Password and Google sign-in methods\n5. Go to Firestore Database and create a new database in production or test mode\n6. Set up initial security rules for Firestore to allow authenticated access",
+          "status": "done",
+          "testStrategy": "Verify project creation by checking the Firebase console dashboard. Confirm Authentication providers and Firestore are properly enabled."
+        },
+        {
+          "id": 2,
+          "title": "Initialize Next.js Application with Required Dependencies",
+          "description": "Create a new Next.js application with TypeScript, Tailwind CSS, and ESLint support using the App Router architecture.",
+          "dependencies": [],
+          "details": "1. Run `npx create-next-app@latest taskflow --typescript --tailwind --eslint --app`\n2. Install Firebase dependencies: `npm install firebase @firebase/auth @firebase/firestore`\n3. Install Shadcn/ui: `npx shadcn-ui@latest init` and follow the setup prompts\n4. Set up additional dependencies as needed (e.g., form libraries, state management)",
+          "status": "done",
+          "testStrategy": "Verify the application runs correctly with `npm run dev` and check that the project structure includes TypeScript configuration, Tailwind setup, and ESLint configuration."
+        },
+        {
+          "id": 3,
+          "title": "Configure Firebase SDK and Environment Variables",
+          "description": "Set up Firebase configuration in the Next.js application and properly manage environment variables for security.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "1. Create a `lib/firebase.ts` file to initialize Firebase\n2. Get Firebase config object from Firebase console (Project settings > Your apps > SDK setup)\n3. Create `.env.local` file with Firebase configuration values\n4. Add environment variables with NEXT_PUBLIC_ prefix for client-side access\n5. Update `.gitignore` to exclude `.env.local`\n6. Create a Firebase initialization function that checks for existing instances\n7. Export auth and firestore instances for use throughout the application",
+          "status": "done",
+          "testStrategy": "Test Firebase connection by implementing a simple authentication check or Firestore read operation. Verify environment variables are correctly loaded."
+        },
+        {
+          "id": 4,
+          "title": "Establish Project Folder Structure and Component Organization",
+          "description": "Set up a scalable folder structure for the Next.js application following best practices for the App Router architecture.",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Create the following directories:\n   - `app/`: For route components and layouts\n   - `components/`: For reusable UI components\n   - `lib/`: For utility functions and service integrations\n   - `types/`: For TypeScript type definitions\n   - `hooks/`: For custom React hooks\n   - `context/`: For React context providers\n2. Set up a basic layout in `app/layout.tsx`\n3. Create initial page components for main routes\n4. Organize Shadcn components in a dedicated subfolder",
+          "status": "done",
+          "testStrategy": "Review the folder structure to ensure it follows Next.js App Router conventions. Verify imports work correctly between different directories."
+        },
+        {
+          "id": 5,
+          "title": "Implement Authentication Context and Basic UI Components",
+          "description": "Create an authentication context provider and basic UI components to prepare for user authentication flows.",
+          "dependencies": [
+            3,
+            4
+          ],
+          "details": "1. Create `context/auth-context.tsx` with Firebase auth integration\n2. Implement sign-in, sign-out, and user state management functions\n3. Create basic UI components using Shadcn/ui:\n   - Button component\n   - Form components\n   - Navigation components\n4. Set up a basic protected route mechanism\n5. Create a simple login/signup form component\n6. Implement a user profile dropdown in the navigation",
+          "status": "done",
+          "testStrategy": "Test authentication flow by implementing temporary login/logout buttons. Verify user state is correctly maintained and accessible throughout the application."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Implement User Authentication System",
+      "description": "Build complete user registration and login flow with Firebase Authentication supporting email/password and Google OAuth",
+      "details": "1. Create auth context in lib/auth-context.tsx\n2. Build login page with Shadcn form components\n3. Build registration page with email validation\n4. Implement Google OAuth sign-in button\n5. Create auth middleware for protected routes\n6. Add user session management\n7. Create logout functionality\n8. Store user data in Firestore users collection: { email, displayName, photoURL }\n9. Add loading states and error handling",
+      "testStrategy": "Test email/password registration and login, verify Google OAuth flow, test session persistence, validate user data storage in Firestore",
+      "priority": "high",
+      "dependencies": [
+        1
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Authentication Context and Provider",
+          "description": "Set up the authentication context and provider to manage user state throughout the application",
+          "dependencies": [],
+          "details": "Create lib/auth-context.tsx with: 1) AuthContext with user, loading, and error states, 2) AuthProvider component that initializes Firebase Auth, 3) useAuth hook for components to access auth state, 4) Methods for login, register, logout, and Google sign-in that will be implemented later",
+          "status": "done",
+          "testStrategy": "Write unit tests for the context using React Testing Library, mocking Firebase Auth functions"
+        },
+        {
+          "id": 2,
+          "title": "Implement User Registration and Login Pages",
+          "description": "Build the registration and login pages with form validation using Shadcn components",
+          "dependencies": [
+            1
+          ],
+          "details": "1) Create pages/register.tsx with email, password, and confirm password fields using Shadcn form components, 2) Add client-side validation for email format and password strength, 3) Create pages/login.tsx with email and password fields, 4) Connect both forms to the auth context methods, 5) Implement proper error handling and display error messages from Firebase",
+          "status": "done",
+          "testStrategy": "Test form validation logic and submission handling with React Testing Library"
+        },
+        {
+          "id": 3,
+          "title": "Implement Google OAuth Authentication",
+          "description": "Add Google sign-in functionality to both login and registration pages",
+          "dependencies": [
+            2
+          ],
+          "details": "1) Configure Firebase project for Google OAuth in Firebase Console, 2) Implement the Google sign-in button component with proper styling, 3) Connect the button to the Google sign-in method in the auth context, 4) Handle OAuth response and errors, 5) Add the Google sign-in button to both login and registration pages",
+          "status": "done",
+          "testStrategy": "Test the OAuth flow with mock implementations of Firebase Auth methods"
+        },
+        {
+          "id": 4,
+          "title": "Create User Data Storage in Firestore",
+          "description": "Set up Firestore integration to store additional user data upon registration",
+          "dependencies": [
+            2,
+            3
+          ],
+          "details": "1) Initialize Firestore in the project, 2) Create a users collection schema with fields for email, displayName, photoURL, and createdAt, 3) Extend the registration and OAuth sign-in methods to create a user document in Firestore after successful authentication, 4) Update the auth context to include the Firestore user data in the user state",
+          "status": "done",
+          "testStrategy": "Write integration tests for the Firestore operations using Firebase emulators"
+        },
+        {
+          "id": 5,
+          "title": "Implement Auth Middleware and Session Management",
+          "description": "Create middleware for protected routes and handle user session persistence",
+          "dependencies": [
+            1,
+            4
+          ],
+          "details": "1) Create middleware/auth.ts to check authentication status for protected routes, 2) Implement redirect logic for authenticated and unauthenticated users, 3) Set up session persistence using Firebase Auth's persistence options, 4) Add a loading state UI for when auth state is being determined, 5) Implement logout functionality with proper cleanup, 6) Create a user profile page that displays the authenticated user's information",
+          "status": "done",
+          "testStrategy": "Test protected routes with both authenticated and unauthenticated user scenarios"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Setup Firestore Data Models and Security Rules",
+      "description": "Define Firestore collections structure and implement comprehensive security rules for data access control",
+      "details": "1. Define Firestore collections:\n   - users/{userId}: { email, displayName, photoURL }\n   - boards/{boardId}: { name, description, ownerId, createdAt, members: [userId1, userId2] }\n   - tasks/{taskId}: { boardId, name, description, status, createdAt, estimatedEndDate }\n   - subtasks/{subtaskId}: { taskId, name, description, status, createdAt, estimatedEndDate, assignedTo: userId }\n2. Write security rules for each collection\n3. Implement user-based access control\n4. Test rules using Firebase Emulator Suite\n5. Create TypeScript interfaces for data models",
+      "testStrategy": "Use Firebase Emulator to test security rules, verify users can only access their own data and boards they're members of, test edge cases for unauthorized access",
+      "priority": "high",
+      "dependencies": [
+        1
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define TypeScript Interfaces for Firestore Data Models",
+          "description": "Create TypeScript interfaces that represent the data structure for all Firestore collections to ensure type safety throughout the application.",
+          "dependencies": [],
+          "details": "Create a models.ts file that defines interfaces for User, Board, Task, and Subtask entities. Include all fields mentioned in the requirements with proper typing. Add timestamps, IDs, and any additional fields needed for the application. Ensure interfaces are exported properly for use throughout the application.",
+          "status": "done",
+          "testStrategy": "Verify interfaces by creating sample objects and checking TypeScript compilation."
+        },
+        {
+          "id": 2,
+          "title": "Implement Firestore Collection Structure",
+          "description": "Set up the Firestore database with the defined collection structure and implement helper functions for CRUD operations.",
+          "dependencies": [],
+          "details": "Initialize Firestore in the application. Create utility functions for creating, reading, updating, and deleting documents in each collection. Implement proper error handling and type checking using the TypeScript interfaces. Ensure proper document references between collections (e.g., tasks reference boardId).",
+          "status": "done",
+          "testStrategy": "Test CRUD operations using the Firebase Emulator Suite with sample data."
+        },
+        {
+          "id": 3,
+          "title": "Write Basic Security Rules for Collections",
+          "description": "Implement initial security rules for each collection to control read/write access based on authentication status.",
+          "dependencies": [],
+          "details": "Create a firestore.rules file with basic rules for each collection. Implement authentication checks to ensure only logged-in users can access data. Define rules for users collection to allow users to read/write only their own data. Set up basic rules for boards, tasks, and subtasks collections.",
+          "status": "done",
+          "testStrategy": "Test rules using Firebase Emulator Suite with authenticated and unauthenticated requests."
+        },
+        {
+          "id": 4,
+          "title": "Implement Advanced Access Control Rules",
+          "description": "Enhance security rules with role-based and relationship-based access controls for boards, tasks, and subtasks.",
+          "dependencies": [],
+          "details": "Extend security rules to implement board membership checks. Allow board owners full access to their boards and associated tasks/subtasks. Allow board members read access and limited write access based on their role. Implement rules to validate data integrity (required fields, data types, etc.). Add rules to prevent unauthorized modifications of critical fields.",
+          "status": "done",
+          "testStrategy": "Create comprehensive test scenarios with different user roles and access patterns using the Firebase Emulator Suite."
+        },
+        {
+          "id": 5,
+          "title": "Set Up Firestore Indexes and Optimize Queries",
+          "description": "Configure necessary composite indexes for complex queries and optimize data access patterns.",
+          "dependencies": [
+            4
+          ],
+          "details": "Identify and create required indexes for common queries (e.g., tasks by boardId and status). Implement query helper functions that leverage indexes efficiently. Configure firestore.indexes.json file for deployment. Optimize data structure for common access patterns, considering query limits and performance. Document query patterns and limitations for the development team.",
+          "status": "done",
+          "testStrategy": "Benchmark query performance using the Firebase Emulator Suite with realistic data volumes. Verify indexes work as expected for complex queries."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Build Board Management System",
+      "description": "Create UI and functionality for users to create, view, update, and delete project boards",
+      "details": "1. Create boards page layout with Shadcn components\n2. Build board creation form with name and description fields\n3. Implement board listing with grid/card layout\n4. Add board editing functionality for owners\n5. Implement board deletion with confirmation dialog\n6. Create board detail view\n7. Add loading states and error handling\n8. Implement Firestore CRUD operations for boards\n9. Add proper TypeScript types for board data",
+      "testStrategy": "Test board creation, editing, and deletion flows, verify only board owners can modify/delete boards, test responsive design on mobile and desktop",
+      "priority": "high",
+      "dependencies": [
+        2,
+        3
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Board Data Models and Firestore Integration",
+          "description": "Define TypeScript interfaces for board data and implement Firestore CRUD operations for boards",
+          "dependencies": [],
+          "details": "Create a types.ts file with Board interface including id, name, description, ownerId, createdAt, and updatedAt fields. Implement a BoardService class with methods for creating, fetching, updating, and deleting boards in Firestore. Set up proper security rules to ensure only owners can modify their boards.",
+          "status": "done",
+          "testStrategy": "Write unit tests for the BoardService class using a mock Firestore implementation. Test each CRUD operation with valid and invalid inputs."
+        },
+        {
+          "id": 2,
+          "title": "Implement Board Creation UI",
+          "description": "Build a form UI for creating new boards with name and description fields",
+          "dependencies": [],
+          "details": "Create a BoardForm component using Shadcn UI components (Card, Form, Input, Textarea, Button). Implement form validation for required fields. Connect form submission to the BoardService create method. Add loading state during submission and error handling for failed requests.",
+          "status": "done",
+          "testStrategy": "Test form validation logic, submission handling, and error states using React Testing Library."
+        },
+        {
+          "id": 3,
+          "title": "Develop Board Listing and Grid View",
+          "description": "Create a responsive grid layout to display all boards with card components",
+          "dependencies": [],
+          "details": "Build a BoardGrid component that fetches and displays boards from Firestore. Use Shadcn Card components to display board information in a responsive grid layout. Implement loading states with skeleton loaders and error handling. Add empty state for when no boards exist.",
+          "status": "done",
+          "testStrategy": "Test the grid component with various data states (loading, error, empty, populated) using React Testing Library."
+        },
+        {
+          "id": 4,
+          "title": "Create Board Detail View",
+          "description": "Implement a detailed view for individual boards with all board information",
+          "dependencies": [],
+          "details": "Create a BoardDetail component that fetches and displays a single board's details. Implement a route parameter to identify which board to display. Add breadcrumb navigation for returning to the boards list. Include loading states and error handling for failed requests.",
+          "status": "done",
+          "testStrategy": "Test the detail view component with various data states and verify proper routing and parameter handling."
+        },
+        {
+          "id": 5,
+          "title": "Add Board Editing and Deletion Functionality",
+          "description": "Implement functionality for board owners to edit board details or delete boards",
+          "dependencies": [
+            4
+          ],
+          "details": "Add edit and delete buttons to the BoardDetail component for board owners. Reuse the BoardForm component for editing, pre-populated with current board data. Implement a confirmation dialog using Shadcn Dialog component for deletion. Connect both actions to the appropriate BoardService methods. Add proper error handling and success notifications.",
+          "status": "done",
+          "testStrategy": "Test edit and delete workflows, including permission checks, form submission for edits, and confirmation handling for deletion."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Implement Task and Sub-task Management",
+      "description": "Build comprehensive task and sub-task creation, viewing, and management functionality within boards",
+      "details": "1. Create task creation form with title, description, status, and estimated end date\n2. Build task list view within board detail page\n3. Implement sub-task creation within tasks\n4. Add task and sub-task editing capabilities\n5. Create status management (To Do, In Progress, Done)\n6. Implement task and sub-task deletion\n7. Add date picker for estimated end dates\n8. Create hierarchical view showing tasks and their sub-tasks\n9. Add proper validation and error handling",
+      "testStrategy": "Test task creation and editing, verify sub-task hierarchy, test status updates, validate date handling, ensure proper data persistence in Firestore",
+      "priority": "high",
+      "dependencies": [
+        4
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Task Creation and Listing",
+          "description": "Create a task creation form and implement the task list view within the board detail page",
+          "dependencies": [],
+          "details": "Build a form component with fields for title, description, status dropdown (To Do, In Progress, Done), and estimated end date. Implement form validation for required fields. Create API endpoints for task creation and retrieval. Develop the task list view component that displays all tasks for a specific board with sorting and filtering options.",
+          "status": "done",
+          "testStrategy": "Unit test form validation logic. Integration test for API endpoints. Create UI tests to verify form submission and task list rendering."
+        },
+        {
+          "id": 2,
+          "title": "Implement Date Picker and Status Management",
+          "description": "Add a date picker component for estimated end dates and implement status management functionality",
+          "dependencies": [],
+          "details": "Integrate a date picker component that allows users to select estimated end dates for tasks. Implement status management that allows users to change task status between To Do, In Progress, and Done states. Create visual indicators for different statuses and implement status change tracking. Add status filtering in the task list view.",
+          "status": "done",
+          "testStrategy": "Test date picker functionality with various date inputs. Verify status changes are properly saved and reflected in the UI. Test status filtering functionality."
+        },
+        {
+          "id": 3,
+          "title": "Implement Sub-task Creation and Hierarchical View",
+          "description": "Build sub-task creation functionality within tasks and create a hierarchical view showing tasks and their sub-tasks",
+          "dependencies": [],
+          "details": "Create a sub-task creation interface within the task detail view. Implement API endpoints for sub-task CRUD operations. Develop a hierarchical view component that displays tasks and their associated sub-tasks with proper indentation and visual cues. Add collapsible/expandable functionality for sub-task sections.",
+          "status": "done",
+          "testStrategy": "Test sub-task creation, retrieval, and association with parent tasks. Verify hierarchical view correctly displays the task-subtask relationships. Test expand/collapse functionality."
+        },
+        {
+          "id": 4,
+          "title": "Implement Task and Sub-task Editing",
+          "description": "Add editing capabilities for both tasks and sub-tasks",
+          "dependencies": [],
+          "details": "Create edit forms for tasks and sub-tasks that pre-populate with existing data. Implement API endpoints for updating task and sub-task information. Add inline editing capabilities for quick updates. Ensure proper validation during edits and implement optimistic UI updates for better user experience.",
+          "status": "done",
+          "testStrategy": "Test edit form validation and submission. Verify API endpoints correctly update the data. Test inline editing functionality and ensure changes persist after page refresh."
+        },
+        {
+          "id": 5,
+          "title": "Implement Deletion and Error Handling",
+          "description": "Add deletion functionality for tasks and sub-tasks with proper error handling and validation",
+          "dependencies": [],
+          "details": "Implement deletion confirmation dialogs for tasks and sub-tasks. Create API endpoints for deletion operations with cascading deletion for sub-tasks when a parent task is deleted. Add comprehensive error handling for all task operations with user-friendly error messages. Implement proper validation to prevent invalid operations (e.g., completing a task with incomplete sub-tasks).",
+          "status": "done",
+          "testStrategy": "Test deletion functionality including cascade deletion. Verify error handling by simulating various error conditions. Test validation rules to ensure they prevent invalid operations."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Build User Invitation and Board Collaboration System",
+      "description": "Implement functionality for board owners to invite users and manage board membership",
+      "details": "1. Create user invitation form with email input\n2. Implement email validation and user lookup\n3. Add users to board members array in Firestore\n4. Create board member management UI\n5. Implement member removal functionality for board owners\n6. Add member list display on board detail page\n7. Update security rules to allow board members access\n8. Add notification system for invitations\n9. Handle edge cases (user not found, already member)",
+      "testStrategy": "Test user invitation flow, verify board access for invited members, test member removal, validate security rule updates, test edge cases and error scenarios",
+      "priority": "medium",
+      "dependencies": [
+        4
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create User Invitation Form and Email Validation",
+          "description": "Develop a form component that allows board owners to invite users by email, with proper validation and error handling.",
+          "dependencies": [],
+          "details": "Create a modal component with an email input field, implement client-side email format validation using regex, add loading state during submission, and display appropriate error messages. Include a submit button and cancel option. The form should prevent submission of invalid emails.",
+          "status": "done",
+          "testStrategy": "Test email validation with valid and invalid formats, test form submission with mock API calls, verify error states display correctly."
+        },
+        {
+          "id": 2,
+          "title": "Implement User Lookup and Board Membership in Firestore",
+          "description": "Create backend functionality to look up users by email and add them to the board's members collection in Firestore.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a Cloud Function that accepts an email and board ID, queries Firestore for matching user accounts, handles cases where users don't exist, and adds valid users to the board's members array with appropriate permission level. Implement transaction handling to prevent race conditions.",
+          "status": "done",
+          "testStrategy": "Test with existing and non-existing email addresses, verify correct Firestore updates, test concurrency with multiple simultaneous invitations."
+        },
+        {
+          "id": 3,
+          "title": "Develop Board Member Management UI",
+          "description": "Create a UI component for displaying and managing board members, including removal functionality for board owners.",
+          "dependencies": [
+            2
+          ],
+          "details": "Build a component that displays all board members with their roles, implement a removal button visible only to board owners, add confirmation dialog before member removal, and ensure real-time updates when membership changes. Include sorting options and search functionality for boards with many members.",
+          "status": "done",
+          "testStrategy": "Test UI rendering with different user roles, verify removal functionality works only for board owners, test confirmation dialog behavior."
+        },
+        {
+          "id": 4,
+          "title": "Update Firestore Security Rules for Board Access",
+          "description": "Modify Firestore security rules to allow board members appropriate access to board data based on their membership status.",
+          "dependencies": [
+            2
+          ],
+          "details": "Update security rules to check if the requesting user's ID exists in the board's members array, create different access levels (read-only, edit, admin) based on member role, ensure board owners retain full access, and test rules thoroughly with different user scenarios.",
+          "status": "done",
+          "testStrategy": "Write security rule tests for various access patterns, verify correct access for board members and denial for non-members."
+        },
+        {
+          "id": 5,
+          "title": "Implement Invitation Notification System",
+          "description": "Create a notification system to alert users when they've been invited to a board, with appropriate UI indicators and email notifications.",
+          "dependencies": [
+            2,
+            4
+          ],
+          "details": "Set up a Cloud Function trigger that fires when a user is added to a board's members collection, implement email notification using a service like SendGrid, create in-app notifications that appear in the user's notification center, and add a badge indicator for new invitations. Include accept/decline functionality in notifications.",
+          "status": "done",
+          "testStrategy": "Test notification generation with mock invitations, verify email delivery with test accounts, test accept/decline flows and their effect on board membership."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Implement Sub-task Assignment System",
+      "description": "Add functionality to assign sub-tasks to specific board members and track assignments",
+      "details": "1. Add assignedTo field to sub-task creation/editing forms\n2. Create user selection dropdown for board members\n3. Update sub-task data model to include assignedTo userId\n4. Add assignment display in sub-task views\n5. Implement assignment change functionality\n6. Add unassignment capability\n7. Update Firestore security rules for assigned tasks\n8. Add visual indicators for assigned vs unassigned tasks\n9. Implement assignment history tracking",
+      "testStrategy": "Test sub-task assignment to board members, verify assignment updates, test unassignment flow, validate security rules for assigned tasks",
+      "priority": "medium",
+      "dependencies": [
+        5,
+        6
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Update Sub-task Data Model for Assignments",
+          "description": "Modify the sub-task data model to include assignment information and update Firestore schema",
+          "dependencies": [],
+          "details": "Add 'assignedTo' field (userId string) and 'assignmentHistory' array (containing objects with userId, timestamp, and action type) to the sub-task model. Update Firestore schema and ensure backward compatibility with existing sub-tasks by providing default values for new fields. Update Firestore security rules to allow assigned users to modify their assigned tasks.",
+          "status": "done",
+          "testStrategy": "Write unit tests to verify the updated data model correctly handles assignment data. Test Firestore security rules to ensure proper access control for assigned users."
+        },
+        {
+          "id": 2,
+          "title": "Implement User Selection UI Components",
+          "description": "Create reusable UI components for selecting board members for task assignment",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop a dropdown component that displays board members with their avatars and names. Implement search/filter functionality for boards with many members. Create a user selection modal for mobile views. Ensure components handle loading states and error cases when fetching board members.",
+          "status": "done",
+          "testStrategy": "Create component tests to verify the dropdown displays users correctly, handles selection events, and manages loading/error states appropriately."
+        },
+        {
+          "id": 3,
+          "title": "Integrate Assignment UI in Sub-task Forms",
+          "description": "Add assignment functionality to sub-task creation and editing forms",
+          "dependencies": [
+            2
+          ],
+          "details": "Modify sub-task creation and editing forms to include the user selection component. Add 'Assign to me' shortcut button. Implement form validation for assignment fields. Update form submission handlers to save assignment data to Firestore. Add unassignment capability with confirmation dialog.",
+          "status": "done",
+          "testStrategy": "Test form submission with various assignment scenarios. Verify validation works correctly. Test unassignment functionality."
+        },
+        {
+          "id": 4,
+          "title": "Display Assignment Information in Sub-task Views",
+          "description": "Update sub-task display components to show assignment information",
+          "dependencies": [
+            1
+          ],
+          "details": "Modify sub-task card and detail views to display assignee information (avatar, name). Add visual indicators for assigned vs unassigned tasks (different styling or icons). Implement tooltips showing assignment details on hover. Update task list views to allow filtering/sorting by assignee.",
+          "status": "done",
+          "testStrategy": "Test rendering of assignment information in different views. Verify visual indicators display correctly for assigned/unassigned tasks. Test filtering and sorting functionality."
+        },
+        {
+          "id": 5,
+          "title": "Implement Assignment History Tracking",
+          "description": "Add functionality to track and display the history of task assignments",
+          "dependencies": [
+            1,
+            3,
+            4
+          ],
+          "details": "Create a service to record assignment changes in the assignmentHistory array. Implement a UI component to display assignment history in the task detail view. Add timestamp formatting for history entries. Create assignment analytics view showing assignment distribution across team members.",
+          "status": "done",
+          "testStrategy": "Test history recording for various assignment actions (assign, reassign, unassign). Verify history display shows correct information and formatting. Test analytics view with different assignment distributions."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Create Personal Task Dashboard",
+      "description": "Build 'My Tasks' dashboard showing all sub-tasks assigned to the current user across all boards",
+      "details": "1. Create My Tasks page with dedicated route\n2. Implement Firestore query to fetch user's assigned sub-tasks\n3. Build task list UI with board context information\n4. Add status filtering (All, To Do, In Progress, Done)\n5. Implement sorting by due date and creation date\n6. Add task status update functionality from dashboard\n7. Include board name and task name for context\n8. Add loading states and empty states\n9. Implement real-time updates for task changes",
+      "testStrategy": "Test task aggregation across multiple boards, verify filtering functionality, test status updates from dashboard, validate real-time updates when tasks are modified",
+      "priority": "medium",
+      "dependencies": [
+        7
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create My Tasks page with routing and data fetching",
+          "description": "Set up the My Tasks dashboard page with proper routing and implement the Firestore query to fetch all subtasks assigned to the current user across all boards.",
+          "dependencies": [],
+          "details": "1. Create a new page component named MyTasksDashboard.js\n2. Set up routing in the app router to point /my-tasks to this component\n3. Implement a Firestore query that fetches all subtasks where assignedTo field matches the current user's ID\n4. Include board and parent task information in the query\n5. Set up state management for the fetched tasks\n6. Implement loading state while data is being fetched",
+          "status": "done",
+          "testStrategy": "Test the routing works correctly and the Firestore query returns the expected data structure. Mock Firestore for unit tests."
+        },
+        {
+          "id": 2,
+          "title": "Build task list UI with context information",
+          "description": "Create the UI components to display the user's tasks in a list format, including board name and parent task name for context.",
+          "dependencies": [
+            1
+          ],
+          "details": "1. Create a TaskListItem component to display individual tasks\n2. Include visual indicators for task status (To Do, In Progress, Done)\n3. Display board name and parent task name for each task\n4. Implement empty state UI when no tasks are assigned\n5. Add proper spacing and dividers between tasks\n6. Ensure the UI is responsive for different screen sizes",
+          "status": "done",
+          "testStrategy": "Create snapshot tests for the UI components. Test different states (loading, empty, with tasks)."
+        },
+        {
+          "id": 3,
+          "title": "Implement filtering and sorting functionality",
+          "description": "Add the ability to filter tasks by status and sort them by due date or creation date.",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Create filter controls for status (All, To Do, In Progress, Done)\n2. Implement sorting options for due date and creation date\n3. Add state management for active filters and sort options\n4. Apply filters and sorting to the task list\n5. Persist filter/sort preferences in local storage\n6. Ensure filters reset appropriately when navigating away and back",
+          "status": "done",
+          "testStrategy": "Test that filtering and sorting functions correctly modify the displayed task list. Verify local storage persistence works."
+        },
+        {
+          "id": 4,
+          "title": "Add task status update functionality",
+          "description": "Enable users to update the status of tasks directly from the dashboard without navigating to the board.",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Create a status update dropdown or button set for each task\n2. Implement the Firestore update function to change task status\n3. Add optimistic UI updates for immediate feedback\n4. Handle error cases and provide appropriate user feedback\n5. Ensure status changes reflect in real-time across the app\n6. Add confirmation for status changes if needed",
+          "status": "done",
+          "testStrategy": "Test the status update functionality with both successful and error scenarios. Verify Firestore is called with correct parameters."
+        },
+        {
+          "id": 5,
+          "title": "Implement real-time updates and final polish",
+          "description": "Set up real-time listeners for task changes and add final UI polish including loading states and animations.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "1. Replace or augment the initial fetch with Firestore onSnapshot listeners\n2. Implement proper cleanup of listeners on component unmount\n3. Add subtle animations for task status changes\n4. Implement skeleton loaders for initial page load\n5. Add pull-to-refresh functionality for mobile users\n6. Perform final testing across different devices and screen sizes\n7. Optimize performance for large numbers of tasks",
+          "status": "done",
+          "testStrategy": "Test real-time updates by simulating Firestore events. Verify listeners are properly cleaned up to prevent memory leaks."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Implement Real-time Data Synchronization",
+      "description": "Add real-time updates using Firestore listeners to sync changes across all users and sessions",
+      "details": "1. Implement Firestore onSnapshot listeners for boards, tasks, and sub-tasks\n2. Create real-time context for managing live data\n3. Add optimistic updates for better UX\n4. Implement conflict resolution for concurrent edits\n5. Add connection status indicators\n6. Handle offline scenarios gracefully\n7. Optimize listener management to prevent memory leaks\n8. Add real-time notifications for board changes\n9. Implement proper cleanup on component unmount",
+      "testStrategy": "Test real-time updates with multiple users, verify optimistic updates, test offline/online scenarios, validate memory management and listener cleanup",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Real-time Data Context Provider",
+          "description": "Implement a React context provider that will manage real-time data connections and state for the application",
+          "dependencies": [],
+          "details": "Create a new context file (RealtimeContext.js) with a provider component that will: 1) Initialize connection state tracking, 2) Set up methods for subscribing to Firestore collections, 3) Implement connection status management, 4) Create a central store for all active listeners, 5) Provide helper methods for components to access real-time data",
+          "status": "done",
+          "testStrategy": "Write unit tests for the context provider using React Testing Library, mocking Firestore responses to verify proper state management and context value updates"
+        },
+        {
+          "id": 2,
+          "title": "Implement Board and Task Listeners",
+          "description": "Set up Firestore onSnapshot listeners for boards and tasks collections to receive real-time updates",
+          "dependencies": [
+            1
+          ],
+          "details": "Create listener functions that: 1) Subscribe to the boards collection and specific task collections, 2) Process incoming snapshots to update application state, 3) Transform Firestore documents into application data models, 4) Implement proper error handling for failed listeners, 5) Add logging for debugging purposes",
+          "status": "done",
+          "testStrategy": "Create integration tests that mock Firestore snapshot events and verify the application state updates correctly in response to different types of changes (add, modify, delete)"
+        },
+        {
+          "id": 3,
+          "title": "Add Optimistic Updates and Conflict Resolution",
+          "description": "Implement optimistic UI updates for better user experience and handle potential conflicts from concurrent edits",
+          "dependencies": [
+            2
+          ],
+          "details": "1) Modify data mutation functions to update local state immediately before sending to Firestore, 2) Implement versioning or timestamp-based conflict detection, 3) Create conflict resolution UI components that appear when conflicts are detected, 4) Add merge strategies for different data types (boards vs tasks), 5) Implement rollback mechanism for failed updates",
+          "status": "done",
+          "testStrategy": "Test concurrent edit scenarios by simulating multiple users making changes to the same data and verify the conflict resolution works as expected"
+        },
+        {
+          "id": 4,
+          "title": "Implement Connection Status and Offline Mode",
+          "description": "Add UI indicators for connection status and implement graceful handling of offline scenarios",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "1) Create a connection status indicator component that shows online/offline state, 2) Implement Firestore offline persistence configuration, 3) Add logic to queue updates when offline and sync when connection is restored, 4) Create user notifications for connection changes, 5) Implement read-only mode for certain features when offline",
+          "status": "done",
+          "testStrategy": "Test offline functionality by simulating network disconnections and verifying that the application continues to function and properly syncs when connection is restored"
+        },
+        {
+          "id": 5,
+          "title": "Add Real-time Notifications and Listener Cleanup",
+          "description": "Implement user notifications for real-time changes and ensure proper cleanup of listeners to prevent memory leaks",
+          "dependencies": [
+            2,
+            3,
+            4
+          ],
+          "details": "1) Create a notification system for alerting users about changes made by others, 2) Implement proper unsubscribe logic for all listeners when components unmount, 3) Add listener management to track and clean up all active subscriptions, 4) Optimize listener creation to prevent duplicate subscriptions, 5) Implement batch updates for efficiency when multiple changes occur",
+          "status": "done",
+          "testStrategy": "Verify memory usage patterns during component mounting/unmounting cycles to ensure listeners are properly cleaned up, and test notification appearance for different types of data changes"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Polish UI/UX and Add Final Enhancements",
+      "description": "Implement responsive design, loading states, error handling, and overall user experience improvements",
+      "details": "1. Ensure full responsive design across all components\n2. Add comprehensive loading skeletons using Shadcn\n3. Implement proper error boundaries and error handling\n4. Add toast notifications for user actions\n5. Optimize performance with React.memo and useMemo\n6. Add keyboard shortcuts for common actions\n7. Implement proper focus management for accessibility\n8. Add confirmation dialogs for destructive actions\n9. Create 404 and error pages\n10. Add final polish to animations and transitions",
+      "testStrategy": "Test responsive design on various screen sizes, verify loading states and error handling, test accessibility with screen readers, validate performance optimizations",
+      "priority": "low",
+      "dependencies": [
+        9
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Responsive Design and Loading States",
+          "description": "Ensure all components adapt to different screen sizes and implement loading skeletons using Shadcn UI",
+          "dependencies": [],
+          "details": "Use CSS media queries and flexbox/grid layouts to make all components responsive. Test on mobile, tablet, and desktop viewports. Implement Shadcn UI skeleton components for all data-fetching operations. Add loading states to buttons and forms during submission.",
+          "status": "pending",
+          "testStrategy": "Test on multiple device sizes using browser dev tools. Verify loading states appear appropriately during network operations by throttling connection in dev tools."
+        },
+        {
+          "id": 2,
+          "title": "Add Error Handling and Notifications",
+          "description": "Implement error boundaries, toast notifications, and create error/404 pages",
+          "dependencies": [
+            1
+          ],
+          "details": "Create React error boundary components to catch and display UI errors. Implement toast notifications using a library like react-hot-toast for user actions (success, error, info). Design and implement custom 404 and error pages that match the application style.",
+          "status": "pending",
+          "testStrategy": "Test error boundaries by intentionally causing component errors. Verify toast notifications appear correctly for different user actions. Ensure 404 page appears for invalid routes."
+        },
+        {
+          "id": 3,
+          "title": "Implement Accessibility Improvements",
+          "description": "Add keyboard shortcuts and proper focus management for better accessibility",
+          "dependencies": [
+            2
+          ],
+          "details": "Implement keyboard shortcuts for common actions using a library like react-hotkeys. Ensure proper focus management by using refs and focus() for modals, dialogs, and form submissions. Add appropriate ARIA attributes to interactive elements. Ensure all interactive elements have visible focus states.",
+          "status": "pending",
+          "testStrategy": "Test with keyboard navigation only. Use accessibility tools like Lighthouse or axe to identify and fix accessibility issues."
+        },
+        {
+          "id": 4,
+          "title": "Add Confirmation Dialogs and Polish Animations",
+          "description": "Implement confirmation dialogs for destructive actions and refine animations/transitions",
+          "dependencies": [
+            3
+          ],
+          "details": "Create reusable confirmation dialog component for actions like delete or cancel. Implement using a modal or dialog component from Shadcn. Polish existing animations and add subtle transitions between states using CSS transitions or a library like Framer Motion. Ensure animations are not too slow or distracting.",
+          "status": "pending",
+          "testStrategy": "Test confirmation dialogs with various user flows. Ensure animations work correctly across browsers and don't cause layout shifts."
+        },
+        {
+          "id": 5,
+          "title": "Optimize Performance",
+          "description": "Improve application performance using React optimization techniques",
+          "dependencies": [
+            4
+          ],
+          "details": "Identify and apply React.memo to components that re-render frequently but with the same props. Use useMemo and useCallback for expensive calculations and callback functions. Analyze and fix any render bottlenecks using React DevTools Profiler. Ensure list components use proper key props for optimal rendering.",
+          "status": "pending",
+          "testStrategy": "Measure performance before and after optimizations using React DevTools Profiler and Lighthouse. Test on lower-end devices to ensure smooth experience."
+        }
+      ]
+    }
+  ]
+}

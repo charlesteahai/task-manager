@@ -1,0 +1,51 @@
+# Task ID: 3
+# Title: Setup Firestore Data Models and Security Rules
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Define Firestore collections structure and implement comprehensive security rules for data access control
+# Details:
+1. Define Firestore collections:
+   - users/{userId}: { email, displayName, photoURL }
+   - boards/{boardId}: { name, description, ownerId, createdAt, members: [userId1, userId2] }
+   - tasks/{taskId}: { boardId, name, description, status, createdAt, estimatedEndDate }
+   - subtasks/{subtaskId}: { taskId, name, description, status, createdAt, estimatedEndDate, assignedTo: userId }
+2. Write security rules for each collection
+3. Implement user-based access control
+4. Test rules using Firebase Emulator Suite
+5. Create TypeScript interfaces for data models
+
+# Test Strategy:
+Use Firebase Emulator to test security rules, verify users can only access their own data and boards they're members of, test edge cases for unauthorized access
+
+# Subtasks:
+## 1. Define TypeScript Interfaces for Firestore Data Models [done]
+### Dependencies: None
+### Description: Create TypeScript interfaces that represent the data structure for all Firestore collections to ensure type safety throughout the application.
+### Details:
+Create a models.ts file that defines interfaces for User, Board, Task, and Subtask entities. Include all fields mentioned in the requirements with proper typing. Add timestamps, IDs, and any additional fields needed for the application. Ensure interfaces are exported properly for use throughout the application.
+
+## 2. Implement Firestore Collection Structure [done]
+### Dependencies: None
+### Description: Set up the Firestore database with the defined collection structure and implement helper functions for CRUD operations.
+### Details:
+Initialize Firestore in the application. Create utility functions for creating, reading, updating, and deleting documents in each collection. Implement proper error handling and type checking using the TypeScript interfaces. Ensure proper document references between collections (e.g., tasks reference boardId).
+
+## 3. Write Basic Security Rules for Collections [done]
+### Dependencies: None
+### Description: Implement initial security rules for each collection to control read/write access based on authentication status.
+### Details:
+Create a firestore.rules file with basic rules for each collection. Implement authentication checks to ensure only logged-in users can access data. Define rules for users collection to allow users to read/write only their own data. Set up basic rules for boards, tasks, and subtasks collections.
+
+## 4. Implement Advanced Access Control Rules [done]
+### Dependencies: None
+### Description: Enhance security rules with role-based and relationship-based access controls for boards, tasks, and subtasks.
+### Details:
+Extend security rules to implement board membership checks. Allow board owners full access to their boards and associated tasks/subtasks. Allow board members read access and limited write access based on their role. Implement rules to validate data integrity (required fields, data types, etc.). Add rules to prevent unauthorized modifications of critical fields.
+
+## 5. Set Up Firestore Indexes and Optimize Queries [done]
+### Dependencies: 3.4
+### Description: Configure necessary composite indexes for complex queries and optimize data access patterns.
+### Details:
+Identify and create required indexes for common queries (e.g., tasks by boardId and status). Implement query helper functions that leverage indexes efficiently. Configure firestore.indexes.json file for deployment. Optimize data structure for common access patterns, considering query limits and performance. Document query patterns and limitations for the development team.
+

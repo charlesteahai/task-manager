@@ -24,10 +24,6 @@ node_modules/
 # OS specific
 .DS_Store
 
-# Task files
-tasks.json
-tasks/
-
 # Ignore Firebase build and cache artifacts
 .firebase/
 
